@@ -15,12 +15,11 @@ unsigned long prevTime;
 
 void setup() {
   // put your setup code here, to run once:
+  prevTime = millis() - timeQuant;
   Serial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Hello world!");
   strip.begin();
   strip.setMaxValue(80);
-  prevTime = millis() - timeQuant;
   effect = &effectFade;
   (*effect)(&color);
 }
