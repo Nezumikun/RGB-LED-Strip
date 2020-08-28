@@ -1,26 +1,32 @@
 #include "effects.h"
 
-bool effectFade(struct color_HSV *color) {
+#define FADE_STEP 2
+
+bool effectBlink(struct color_HSV *color) {
   static unsigned char step = 0;
   static unsigned int hue = 0;
   static int brightness = 0;
+  bool res = false;
   if (step == 0) {
-    brightness += 5;
-    if (brightness >= 255) {
+    brightness += FADE_STEP;
+    if (brightness >= 100) {
       step = 1;
-      brightness = 255;
+      brightness = 100;
     }
   }
   else if (step == 1) {
-    brightness -= 5;
+    brightness -= FADE_STEP;
     if (brightness <= 0) {
       step = 0;
       brightness = 0;
-      hue = (hue + 120) % 360;
+      hue = (hue + 60) % 360;
+      if (hue == 0) {
+        res = true;
+      }
     }
   }
   color->Hue = hue;
   color->Saturation = 100;
   color->Value = brightness;
-  return false;
+  return res;
 }

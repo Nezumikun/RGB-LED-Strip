@@ -36,14 +36,13 @@ void RgbStrip::printHex(int val) {
   Serial.print(val, HEX);
 }
 
-void RgbStrip::printColorRgb() {
-    /*Serial.print ("RGB = 0x");
+void inline RgbStrip::printColorRgb() {
+    Serial.print ("RGB = 0x");
     printHex (255 - this->RGB.valueR);
     printHex (255 - this->RGB.valueG);
     printHex (255 - this->RGB.valueB);
-    Serial.println ();*/
+    Serial.println ();
 }
-
 struct color_HSV RgbStrip::rgb2hsv(int r, int g, int b) {
   struct color_HSV temp = { 0, 0, 0 };
   int maxValue = max(max(r, g), b);
@@ -126,7 +125,6 @@ void RgbStrip::setColorFromHSV(int h, int s, int v) {
   v = v * maxValue / 100;
   struct color_RGB temp = this->hsv2rgb(h, s, v);
   this->RGB = { (byte)(255 - temp.valueR), (byte)(255 - temp.valueG), (byte)(255 - temp.valueB) };
-  this->printColorRgb();
   this->setLeds();
 }
 
@@ -146,6 +144,7 @@ void RgbStrip::setLeds() {
     analogWrite(this->ledG, this->RGB.valueG);
     analogWrite(this->ledB, this->RGB.valueB);
   }
+  //this->printColorRgb();
   digitalWrite(this->powerPin, HIGH);
 }
 

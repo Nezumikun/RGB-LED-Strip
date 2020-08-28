@@ -5,6 +5,6 @@
 
 typedef bool (*effectFunc) (struct color_HSV *color);
 
-bool effectFade(struct color_HSV *color);
+bool effectBlink(struct color_HSV *color);
 
 #endif
