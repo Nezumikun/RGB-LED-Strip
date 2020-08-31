@@ -30,3 +30,16 @@ bool effectBlink(struct color_HSV *color) {
   color->Value = brightness;
   return res;
 }
+
+bool effectRainbow(struct color_HSV *color) {
+  static unsigned int hue = 0;
+  bool res = false;
+  if (++hue >= 360) {
+    hue = 0;
+    res = true;
+  }
+  color->Hue = hue;
+  color->Saturation = 100;
+  color->Value = 100;
+  return res;
+}

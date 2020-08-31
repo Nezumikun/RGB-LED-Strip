@@ -20,29 +20,30 @@ void RgbStrip::begin() {
   Serial.println(F("RGB Strip initilized"));
 }
 
-void RgbStrip::printColorHsv() {
-  Serial.print("H = ");
-  Serial.print(this->HSV.Hue);
-  Serial.print(" S = ");
-  Serial.print(this->HSV.Saturation);
-  Serial.print(" V = ");
-  Serial.print(this->HSV.Value);
-  Serial.println();
-}
+//void RgbStrip::printColorHsv() {
+//  Serial.print("H = ");
+//  Serial.print(this->HSV.Hue);
+//  Serial.print(" S = ");
+//  Serial.print(this->HSV.Saturation);
+//  Serial.print(" V = ");
+//  Serial.print(this->HSV.Value);
+//  Serial.println();
+//}
 
-void RgbStrip::printHex(int val) {
-  if (val < 0x10)
-    Serial.print ("0");
-  Serial.print(val, HEX);
-}
+//void RgbStrip::printHex(int val) {
+//  if (val < 0x10)
+//    Serial.print ("0");
+//  Serial.print(val, HEX);
+//}
 
-void inline RgbStrip::printColorRgb() {
-    Serial.print ("RGB = 0x");
-    printHex (255 - this->RGB.valueR);
-    printHex (255 - this->RGB.valueG);
-    printHex (255 - this->RGB.valueB);
-    Serial.println ();
-}
+//void inline RgbStrip::printColorRgb() {
+//    Serial.print ("RGB = 0x");
+//    printHex (255 - this->RGB.valueR);
+//    printHex (255 - this->RGB.valueG);
+//    printHex (255 - this->RGB.valueB);
+//    Serial.println ();
+//}
+
 struct color_HSV RgbStrip::rgb2hsv(int r, int g, int b) {
   struct color_HSV temp = { 0, 0, 0 };
   int maxValue = max(max(r, g), b);
@@ -68,10 +69,9 @@ struct color_HSV RgbStrip::rgb2hsv(int r, int g, int b) {
   return temp;
 }
 
-void RgbStrip::setColorFromRgb(int r, int g, int b) {
+void RgbStrip::setColorFromRgb(int r, int g, int b, bool show) {
   this->HSV = this->rgb2hsv(r, g, b);
-  //this->printColorHsv();
-  this->setColorFromHSV(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value);
+  this->setColorFromHSV(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value, show);
 }
 
 struct color_RGB RgbStrip::hsv2rgb(int h, int s, int v) {
@@ -118,19 +118,20 @@ struct color_RGB RgbStrip::hsv2rgb(int h, int s, int v) {
   return temp;
 }
 
-void RgbStrip::setColorFromHSV(int h, int s, int v) {
+void RgbStrip::setColorFromHSV(int h, int s, int v, bool show) {
   this->HSV.Hue = h;
   this->HSV.Saturation = s;
   this->HSV.Value = v;
   v = v * maxValue / 100;
   struct color_RGB temp = this->hsv2rgb(h, s, v);
   this->RGB = { (byte)(255 - temp.valueR), (byte)(255 - temp.valueG), (byte)(255 - temp.valueB) };
-  this->setLeds();
+  if (show)
+    this->setLeds();
 }
 
 void RgbStrip::setMaxValue(int maxValue) {
   this->maxValue = maxValue;
-  this->setColorFromHSV(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value);
+  this->setColorFromHSV(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value, true);
 }
 
 void RgbStrip::setLeds() {
@@ -158,14 +159,14 @@ void RgbStrip::off() {
   this->setLeds();
 }
 
-struct color_RGB RgbStrip::getRgb() {
-  return this->hsv2rgb(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value);
-}
+// struct color_RGB RgbStrip::getRgb() {
+//   return this->hsv2rgb(this->HSV.Hue, this->HSV.Saturation, this->HSV.Value);
+// }
 
-struct color_HSV RgbStrip::getHsv() {
-  return this->HSV;
-}
+// struct color_HSV RgbStrip::getHsv() {
+//   return this->HSV;
+// }
 
-int RgbStrip::getMaxValue() {
-  return this->maxValue;
-}
+// int RgbStrip::getMaxValue() {
+//   return this->maxValue;
+// }

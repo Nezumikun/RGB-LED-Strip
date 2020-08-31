@@ -6,15 +6,16 @@
 #define ledG 9
 #define ledB 6
 #define powerPin 8
-#define timeQuant 50
+#define timeQuant 40
 
 RgbStrip strip(ledR, ledG, ledB, powerPin);
-struct color_HSV color;
+struct color_HSV colorHSV;
 unsigned long prevTime;
-const effectFunc effectList[] = {
-  effectBlink, effectBlink
+const effectInfo effectList[] = {
+  { effectBlink, 2 }, { effectRainbow, 5 }
 };
 unsigned char currentEffect = 0;
+unsigned char currentTime = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,7 +24,8 @@ void setup() {
   Serial.println(F("Hello world!"));
   strip.begin();
   strip.setMaxValue(80);
-  (*effectList[currentEffect])(&color);
+  (*(effectList[currentEffect].func))(&colorHSV);
+  strip.setColorFromHSV(colorHSV.Hue, colorHSV.Saturation, colorHSV.Value, false);
   strip.on();
 }
 
@@ -33,20 +35,28 @@ void loop() {
     Serial.print(now);
     Serial.print(" Seq = ");
     Serial.print(currentEffect);
+    Serial.print(" t = ");
+    Serial.print(currentTime);
     Serial.print(" H = ");
-    Serial.print(color.Hue);
+    Serial.print(colorHSV.Hue);
     // Serial.print(" S = ");
     // Serial.print(color.Saturation);
     Serial.print(" V = ");
-    Serial.print(color.Value);
+    Serial.print(colorHSV.Value);
     Serial.println();
-    strip.setColorFromHSV(color.Hue, color.Saturation, color.Value);
-    if ((*effectList[currentEffect])(&color)) {
-      currentEffect++;
-      if (currentEffect >= sizeof(effectList)/sizeof(effectFunc)) {
-        currentEffect = 0;
+    strip.setLeds();
+    // unsigned long now2 = micros();
+    if ((*(effectList[currentEffect].func))(&colorHSV)) {
+      if (++currentTime >= effectList[currentEffect].times) {
+        currentTime = 0;
+        currentEffect++;
+        if (currentEffect >= sizeof(effectList)/sizeof(effectInfo)) {
+          currentEffect = 0;
+        }
       }
     }
+    strip.setColorFromHSV(colorHSV.Hue, colorHSV.Saturation, colorHSV.Value, false);
     prevTime = now;
+    // Serial.println(micros() - now2);
   }
 }
