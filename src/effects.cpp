@@ -8,6 +8,10 @@ bool effectBlink(struct color_HSV *color) {
   static int brightness = 0;
   bool res = false;
   if (step == 0) {
+    if (brightness == 0) {
+      debug("Start blink fade in. Hue = ");
+      Serial.println(hue);
+    }
     brightness += FADE_STEP;
     if (brightness >= 100) {
       step = 1;
@@ -15,6 +19,9 @@ bool effectBlink(struct color_HSV *color) {
     }
   }
   else if (step == 1) {
+    if (brightness >= 100) {
+      debugln("Start blink fade out");
+    }
     brightness -= FADE_STEP;
     if (brightness <= 0) {
       step = 0;
@@ -34,6 +41,9 @@ bool effectBlink(struct color_HSV *color) {
 bool effectRainbow(struct color_HSV *color) {
   static unsigned int hue = 0;
   bool res = false;
+  if (hue == 0) {
+    debugln("Start rainbow");
+  }
   if (++hue >= 360) {
     hue = 0;
     res = true;
@@ -43,3 +53,4 @@ bool effectRainbow(struct color_HSV *color) {
   color->Value = 100;
   return res;
 }
+
