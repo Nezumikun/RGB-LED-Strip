@@ -61,7 +61,7 @@ bool effectBlinkRandom(struct color_HSV *color) {
   bool res = false;
   if (step == 0) {
     if (brightness == 0) {
-      hue = (hue + random(330)) % 360;
+      hue = (hue + random(300) + 30) % 360;
       debug("Start blink fade in. Random hue = ");
       Serial.println(hue);
     }
