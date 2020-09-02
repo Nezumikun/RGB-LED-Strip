@@ -15,5 +15,6 @@ struct effectInfo {
 
 bool effectBlink(struct color_HSV *color);
 bool effectRainbow(struct color_HSV *color);
+bool effectBlinkRandom(struct color_HSV *color);
 
 #endif

@@ -12,7 +12,7 @@ RgbStrip strip(ledR, ledG, ledB, powerPin);
 struct color_HSV colorHSV;
 unsigned long prevTime;
 const effectInfo effectList[] = {
-  { effectBlink, -2 }, { effectRainbow, -5 }
+  { effectBlink, -2 }, { effectRainbow, -5 }, { effectBlinkRandom, -5 }, { effectRainbow, -5 }
 };
 unsigned char currentEffect = 0;
 unsigned char currentTime = 0;
